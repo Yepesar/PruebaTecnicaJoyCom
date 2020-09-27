@@ -25,6 +25,7 @@ public class CarController : MonoBehaviour
     [SerializeField] private List<Wheel> wheels;
     [SerializeField] private Rigidbody rigidbody;
     [SerializeField] private float speedMultiplicator = 500;
+    [SerializeField] private Vector3 centerOfMass;
 
     private float inputX, inputY;
 
@@ -32,18 +33,44 @@ public class CarController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        rigidbody.centerOfMass = centerOfMass;
     }
 
     // Update is called once per frame
     void Update()
     {
+        AnimateWheels();
         GeInputs();
     }
 
-    private void LateUpdate()
+    private void FixedUpdate()
     {
         Move();
+        Turn();
+    }
+
+    private void AnimateWheels()
+    {
+        foreach (var wheel in wheels)
+        {
+            Quaternion _rot;
+            Vector3 _pos;
+            wheel.wCollider.GetWorldPose(out _pos, out _rot);
+            //wheel.wheelModel.transform.position = _pos;
+            wheel.wheelModel.transform.rotation = _rot;
+        }
+    }
+
+    private void Turn()
+    {
+        foreach (var wheel in wheels)
+        {
+            if (wheel.axel == Axel.Front)
+            {
+                var _steerAngle = inputX * turnSensitivity * maxSteerAngle;
+                wheel.wCollider.steerAngle = Mathf.Lerp( wheel.wCollider.steerAngle,_steerAngle,0.5f);
+            }
+        }
     }
 
     private void GeInputs()
