@@ -29,6 +29,7 @@ public class Car : MonoBehaviour
     public WheelCollider FrontLeft { get => frontLeft; set => frontLeft = value; }
     public WheelCollider FrontRight { get => frontRight; set => frontRight = value; }
     public float SteerAngle { get => steerAngle; set => steerAngle = value; }
+    public float MotorForce { get => motorForce; set => motorForce = value; }
 
     private void Start()
     {
@@ -43,8 +44,8 @@ public class Car : MonoBehaviour
 
     private void HandleMotor()
     {
-        backLeft.motorTorque = yInput * motorForce;
-        backRight.motorTorque = yInput * motorForce;
+        backLeft.motorTorque = yInput * MotorForce;
+        backRight.motorTorque = yInput * MotorForce;
         
         if (isBreaking)
         {

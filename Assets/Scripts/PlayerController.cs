@@ -6,10 +6,17 @@ public class PlayerController : MonoBehaviour,IBoosteable
 {
     [SerializeField] private Car car;
     [SerializeField] private float maxspeed;
+    [SerializeField] private ParticleSystem boostVFX;
 
     private bool breaking = false;
     private bool canAccel = true;
     private float currentSpeed;
+
+    private void Awake()
+    {
+        boostVFX.Stop();
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -59,8 +66,13 @@ public class PlayerController : MonoBehaviour,IBoosteable
     {
         float savedSpeed = maxspeed;
         maxspeed += factor;
+        boostVFX.Play();
+        float savedMotor = car.MotorForce;
+        car.MotorForce *= 2;
         yield return new WaitForSeconds(time);
         maxspeed = savedSpeed;
+        car.MotorForce = savedMotor;
+        boostVFX.Stop();
         yield return null;
     }
 }

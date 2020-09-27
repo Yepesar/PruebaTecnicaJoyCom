@@ -8,12 +8,18 @@ public class IABrain : MonoBehaviour,IBoosteable
     [SerializeField] private float minNodeDistance = 0.1f;
     [SerializeField] private Car car;
     [SerializeField] private float maxspeed = 100;
+    [SerializeField] private ParticleSystem boostVFX;
 
     private float currentSpeed;
     private float horizontalInput;
     private float verticalInput;
     private int nodeIndex = 0;
     private bool hasDirection = false;
+
+    private void Awake()
+    {
+        boostVFX.Stop();
+    }
 
     private void LateUpdate()
     {
@@ -76,9 +82,14 @@ public class IABrain : MonoBehaviour,IBoosteable
     private IEnumerator GetBoost(float factor, float time)
     {
         float savedSpeed = maxspeed;
+        float savedMotor = car.MotorForce;
+        car.MotorForce *= 2;
         maxspeed += factor;
+        boostVFX.Play();
         yield return new WaitForSeconds(time);
         maxspeed = savedSpeed;
+        car.MotorForce = savedMotor;
+        boostVFX.Stop();
         yield return null;
     }
 }
