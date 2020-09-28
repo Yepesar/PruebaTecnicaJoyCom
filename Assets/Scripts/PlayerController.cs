@@ -7,6 +7,7 @@ public class PlayerController : MonoBehaviour,IBoosteable,IJumpeable
     [SerializeField] private Car car;
     [SerializeField] private float maxspeed;
     [SerializeField] private ParticleSystem boostVFX;
+    [SerializeField] private Animator characterAnim;
 
     private bool breaking = false;
     private bool canAccel = true;
@@ -20,7 +21,6 @@ public class PlayerController : MonoBehaviour,IBoosteable,IJumpeable
     // Update is called once per frame
     void Update()
     {
-
         SpeedControl();
 
         if (Input.GetKey(KeyCode.Space))
@@ -68,6 +68,7 @@ public class PlayerController : MonoBehaviour,IBoosteable,IJumpeable
         boostVFX.Play();
         float savedMotor = car.MotorForce;
         car.MotorForce *= 2;
+        StartCoroutine(AnimationControl(time, false, false, true));
         yield return new WaitForSeconds(time);
         maxspeed = savedSpeed;
         car.MotorForce = savedMotor;
@@ -79,5 +80,18 @@ public class PlayerController : MonoBehaviour,IBoosteable,IJumpeable
     {
         Vector3 direction = transform.TransformDirection( Vector3.up);
         car.Rb.AddForce(direction * jumpForce, ForceMode.Impulse);
+        StartCoroutine(AnimationControl(1, true, false, false));
+    }
+
+    public IEnumerator AnimationControl(float time, bool jump, bool drive, bool boost)
+    {      
+        characterAnim.SetBool("Boosting", boost);
+        characterAnim.SetBool("jump", jump);
+        characterAnim.SetBool("Driving", drive);
+        yield return new WaitForSeconds(time);
+        characterAnim.SetBool("Boosting", false);
+        characterAnim.SetBool("jump", false);
+        characterAnim.SetBool("Driving", true);
+        yield return null;
     }
 }

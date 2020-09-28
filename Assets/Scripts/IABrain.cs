@@ -9,6 +9,7 @@ public class IABrain : MonoBehaviour,IBoosteable,IJumpeable
     [SerializeField] private Car car;
     [SerializeField] private float maxspeed = 100;
     [SerializeField] private ParticleSystem boostVFX;
+    [SerializeField] private Animator characterAnim;
 
     private float currentSpeed;
     private float horizontalInput;
@@ -82,6 +83,7 @@ public class IABrain : MonoBehaviour,IBoosteable,IJumpeable
     {
         Vector3 direction = transform.TransformDirection(Vector3.up);
         car.Rb.AddForce(direction * jumpForce, ForceMode.Impulse);
+        StartCoroutine(AnimationControl(1, true, false, false));
     }
 
     private IEnumerator GetBoost(float factor, float time)
@@ -91,6 +93,7 @@ public class IABrain : MonoBehaviour,IBoosteable,IJumpeable
         car.MotorForce *= 2;
         maxspeed += factor;
         boostVFX.Play();
+        StartCoroutine(AnimationControl(time, false, false, true));
         yield return new WaitForSeconds(time);
         maxspeed = savedSpeed;
         car.MotorForce = savedMotor;
@@ -98,4 +101,15 @@ public class IABrain : MonoBehaviour,IBoosteable,IJumpeable
         yield return null;
     }
 
+    public IEnumerator AnimationControl(float time, bool jump, bool drive, bool boost)
+    {
+        characterAnim.SetBool("Boosting", boost);
+        characterAnim.SetBool("jump", jump);
+        characterAnim.SetBool("Driving", drive);
+        yield return new WaitForSeconds(time);
+        characterAnim.SetBool("Boosting", false);
+        characterAnim.SetBool("jump", false);
+        characterAnim.SetBool("Driving", true);
+        yield return null;
+    }
 }
