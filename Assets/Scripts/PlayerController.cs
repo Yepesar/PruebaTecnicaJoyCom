@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour,IBoosteable
+public class PlayerController : MonoBehaviour,IBoosteable,IJumpeable
 {
     [SerializeField] private Car car;
     [SerializeField] private float maxspeed;
@@ -59,7 +59,6 @@ public class PlayerController : MonoBehaviour,IBoosteable
     public void Boost(float factor, float time)
     {
         StartCoroutine(GetBoost(factor, time));
-        Debug.Log("Getting more speed");
     }
 
     private IEnumerator GetBoost(float factor, float time)
@@ -74,5 +73,11 @@ public class PlayerController : MonoBehaviour,IBoosteable
         car.MotorForce = savedMotor;
         boostVFX.Stop();
         yield return null;
+    }
+
+    public void Jump(float jumpForce)
+    {
+        Vector3 direction = transform.TransformDirection( Vector3.up);
+        car.Rb.AddForce(direction * jumpForce, ForceMode.Impulse);
     }
 }

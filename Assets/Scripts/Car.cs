@@ -30,10 +30,11 @@ public class Car : MonoBehaviour
     public WheelCollider FrontRight { get => frontRight; set => frontRight = value; }
     public float SteerAngle { get => steerAngle; set => steerAngle = value; }
     public float MotorForce { get => motorForce; set => motorForce = value; }
+    public Rigidbody Rb { get => rb; set => rb = value; }
 
     private void Start()
     {
-        rb.centerOfMass = centerOfMass;
+        Rb.centerOfMass = centerOfMass;
     }
 
     private void FixedUpdate()

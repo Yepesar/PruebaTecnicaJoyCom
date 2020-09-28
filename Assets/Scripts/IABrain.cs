@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class IABrain : MonoBehaviour,IBoosteable
+public class IABrain : MonoBehaviour,IBoosteable,IJumpeable
 {
     [SerializeField] private List<Transform> nodes;
     [SerializeField] private float minNodeDistance = 0.1f;
@@ -76,7 +76,12 @@ public class IABrain : MonoBehaviour,IBoosteable
     public void Boost(float factor, float time)
     {
         StartCoroutine(GetBoost(factor, time));
-        Debug.Log("Getting more speed");
+    }
+
+    public void Jump(float jumpForce)
+    {
+        Vector3 direction = transform.TransformDirection(Vector3.up);
+        car.Rb.AddForce(direction * jumpForce, ForceMode.Impulse);
     }
 
     private IEnumerator GetBoost(float factor, float time)
@@ -92,4 +97,5 @@ public class IABrain : MonoBehaviour,IBoosteable
         boostVFX.Stop();
         yield return null;
     }
+
 }
