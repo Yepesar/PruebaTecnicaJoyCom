@@ -12,8 +12,7 @@ public class Jumpad : MonoBehaviour
         if (obj != null)
         {
             obj.Jump(jumpForce);
+            other.gameObject.GetComponentInChildren<AudioManager>().Play("CarJump", false);         
         }
-
-       // gameObject.SetActive(false);
     }
 }

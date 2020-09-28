@@ -13,6 +13,7 @@ public class SpeedBoost : MonoBehaviour
         if (obj !=null)
         {
             obj.Boost(speedFactor,boostTime);
+            other.gameObject.GetComponentInChildren<AudioManager>().Play("CarBoost", false);
         }
 
         gameObject.SetActive(false);

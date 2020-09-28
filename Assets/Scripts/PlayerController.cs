@@ -8,9 +8,11 @@ public class PlayerController : MonoBehaviour,IBoosteable,IJumpeable
     [SerializeField] private float maxspeed;
     [SerializeField] private ParticleSystem boostVFX;
     [SerializeField] private Animator characterAnim;
+    [SerializeField] private AudioManager audioManager;
 
     private bool breaking = false;
     private bool canAccel = true;
+    private bool engineAudio = true;
     private float currentSpeed;
 
     private void Awake()
@@ -53,6 +55,21 @@ public class PlayerController : MonoBehaviour,IBoosteable,IJumpeable
         else
         {
             canAccel = false;
+        }
+
+        if (currentSpeed > 0)
+        {
+            if (engineAudio)
+            {
+                audioManager.Play("CarDrive", true);
+                engineAudio = false;
+            }
+            
+        }
+        else if (currentSpeed <= 0)
+        {
+            audioManager.StopSound("CarDrive");
+            engineAudio = true;
         }
     }
 

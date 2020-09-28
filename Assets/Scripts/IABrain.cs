@@ -10,12 +10,14 @@ public class IABrain : MonoBehaviour,IBoosteable,IJumpeable
     [SerializeField] private float maxspeed = 100;
     [SerializeField] private ParticleSystem boostVFX;
     [SerializeField] private Animator characterAnim;
+    [SerializeField] private AudioManager audioManager;
 
     private float currentSpeed;
     private float horizontalInput;
     private float verticalInput;
     private int nodeIndex = 0;
     private bool hasDirection = false;
+    private bool engineAudio;
 
     private void Awake()
     {
@@ -55,22 +57,35 @@ public class IABrain : MonoBehaviour,IBoosteable,IJumpeable
         }
         
         car.GetInput(horizontalInput, verticalInput, false);
+
+        if (currentSpeed > 0)
+        {
+            if (engineAudio)
+            {
+                audioManager.Play("CarDrive", true);
+                engineAudio = false;
+            }
+
+        }
+        else if(currentSpeed <= 0)
+        {
+            audioManager.StopSound("CarDrive");
+            engineAudio = true;
+        }
     }
 
     private void ChecktNodeDistance()
     {
         if (Vector3.Distance(transform.position, nodes[nodeIndex].position) <= minNodeDistance)
         {
-            if (nodeIndex >= nodes.Count)
+            if (nodeIndex >= nodes.Count - 1)
             {
                 nodeIndex = 0;
             }
             else
             {
                 nodeIndex++;
-            }
-
-            
+            }         
         }
     }
 

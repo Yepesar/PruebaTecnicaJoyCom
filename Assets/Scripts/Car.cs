@@ -12,6 +12,7 @@ public class Car : MonoBehaviour
     [SerializeField] private float maxSteerAngle;
     [SerializeField] private Rigidbody rb;
     [SerializeField] private Vector3 centerOfMass;
+    [SerializeField] private AudioManager audioManager;
     //Ruedas
     [Header("Wheels colliders")]
     [SerializeField] private WheelCollider frontLeft;
@@ -50,13 +51,14 @@ public class Car : MonoBehaviour
         
         if (isBreaking)
         {
-            currentBreakForce = breakForce;
+            currentBreakForce = breakForce;          
+            audioManager.Play("CarBreak", false);
             Break();
         }
         else
         {
             currentBreakForce = 0;
-            Break();
+            Break();           
         }
     }
 
@@ -81,6 +83,7 @@ public class Car : MonoBehaviour
         FrontRight.brakeTorque = currentBreakForce;
         backLeft.brakeTorque = currentBreakForce;
         backRight.brakeTorque = currentBreakForce;
+        
     }
 
     public void GetInput(float x, float y, bool breaking)
